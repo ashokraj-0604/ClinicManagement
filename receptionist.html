@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receptionist Dashboard</title>
+  <link rel="stylesheet" href="styles/receptionist.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Clinic</h2>
+      <ul>
+        <li><button class="nav-btn" data-section="add-patient">Add Patient</button></li>
+        <li><button class="nav-btn" data-section="generate-token">Generate Token</button></li>
+        <li><button class="nav-btn" data-section="billing">Manage Billing</button></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <header>
+        <div class="profile">
+          <span>Receptionist</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Add Patient Section -->
+        <section id="add-patient" class="section">
+          <h2>Add New Patient</h2>
+          <form id="add-patient-form">
+            <label for="patient-name">Patient Name:</label>
+            <input type="text" id="patient-name" required>
+
+            <label for="patient-age">Age:</label>
+            <input type="number" id="patient-age" required>
+
+            <label for="patient-contact">Contact Number:</label>
+            <input type="text" id="patient-contact" required>
+
+            <label for="patient-gender">Gender:</label>
+            <select id="patient-gender" required>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+
+            <button type="submit">Add Patient</button>
+          </form>
+        </section>
+
+        <!-- Generate Token Section -->
+        <section id="generate-token" class="section hidden">
+          <h2>Generate Token</h2>
+          <form id="generate-token-form">
+            <label for="patient-token-name">Patient Name:</label>
+            <input type="text" id="patient-token-name" required>
+
+            <label for="token-number">Token Number:</label>
+            <input type="number" id="token-number" required>
+
+            <button type="submit">Generate Token</button>
+          </form>
+          <div id="token-list">
+            <h3>Generated Tokens</h3>
+            <ul></ul>
+          </div>
+        </section>
+
+        <!-- Billing Section -->
+        <section id="billing" class="section hidden">
+          <h2>Manage Billing</h2>
+          <form id="billing-form">
+            <label for="bill-patient-name">Patient Name:</label>
+            <input type="text" id="bill-patient-name" required>
+
+            <label for="service">Service:</label>
+            <input type="text" id="service" required>
+
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" required>
+
+            <button type="submit">Generate Bill</button>
+          </form>
+          <div id="billing-history">
+            <h3>Billing History</h3>
+            <ul></ul>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <!-- <form id="generate-token-form">
+    <label for="token-patient-name">Patient Name:</label>
+    <input type="text" id="token-patient-name" required>
+    
+    <button type="submit">Generate Token</button>
+  </form> -->
+  <script src="scripts/firebase-config.js"></script>
+  <script src="scripts/receptionist.js"></script>
+</body>
+</html>

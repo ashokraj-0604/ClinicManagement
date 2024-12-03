@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Management - Login</title>
+    <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Clinic Management System</h1>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="email" required>
+            <input type="password" id="password" placeholder="password" required>
+            <button type="submit" id=":Login">Login</button>
+        </form>
+        <div id="errorMessage"></div>
+    </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getDatabase, ref, set, get, child} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBOZf7JKBn4gv3ONORkjtlDn1-pSar_LKc",
+          authDomain: "clinicmanagementsystem-72d34.firebaseapp.com",
+          projectId: "clinicmanagementsystem-72d34",
+          storageBucket: "clinicmanagementsystem-72d34.firebasestorage.app",
+          messagingSenderId: "282804166043",
+          appId: "1:282804166043:web:b227e1301e84784395953e",
+          measurementId: "G-FP7R1ZB656"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById("Login").addEventListener('click', function(e){
+            e.preventDefault();
+            set(ref(db, 'user/' +document.getElementById("email").value),
+        {
+
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+        });
+        alert("Login Sucessfull..!!");
+        });
+      </script>
+    <script src="scripts/auth.js" type="module"></script>
+</body>
+</html>
