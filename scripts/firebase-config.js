@@ -1,23 +1,24 @@
-
-
-// Import the functions you need from the SDKs you need
+// firebase-config.js
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase } from "firebase/database";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBOZf7JKBn4gv3ONORkjtlDn1-pSar_LKc",
-  authDomain: "clinicmanagementsystem-72d34.firebaseapp.com",
-  projectId: "clinicmanagementsystem-72d34",
-  storageBucket: "clinicmanagementsystem-72d34.firebasestorage.app",
-  messagingSenderId: "282804166043",
-  appId: "1:282804166043:web:b227e1301e84784395953e",
-  measurementId: "G-FP7R1ZB656"
+  apiKey: "AIzaSyCubhQRka_IMahsXQs7FCDuKXcRZH35KQU",
+  authDomain: "clinicmanagementsys.firebaseapp.com",
+  projectId: "clinicmanagementsys",
+  storageBucket: "clinicmanagementsys.firebasestorage.app",
+  messagingSenderId: "182742574619",
+  appId: "1:182742574619:web:fd759ba586dacf4637babe",
+  measurementId: "G-WYF5BTTBFD"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const db = getDatabase(app);
+
+export { db }; // Export `db` for reuse
+
+

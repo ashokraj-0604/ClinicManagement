@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doctor Dashboard</title>
-  <link rel="stylesheet" href="styles/doctor.css">
+  <link rel="stylesheet" href="/styles/doctor.css">
 </head>
 <body>
   <div class="dashboard">
     <!-- Sidebar -->
     <div class="sidebar">
-      <h2>Clinic</h2>
+      <h2>CLINIC MANAGER</h2>
       <ul>
         <li><button class="nav-btn" data-section="overview">Dashboard</button></li>
+        <li><button class="nav-btn" data-section="appointments">Appointments</button></li>
         <li><button class="nav-btn" data-section="tokens">Patient Tokens</button></li>
         <li><button class="nav-btn" data-section="history">Patient History</button></li>
         <li><button class="nav-btn" data-section="prescriptions">Prescriptions</button></li>
@@ -24,27 +25,53 @@
     <div class="main">
       <header>
         <div class="profile">
-          <span>Dr. John Doe</span>
-          <img src="doctor.png" alt="Doctor" class="avatar">
-        </div>
+          <span>DR. CLINIC</span>
+          <!-- <img src="/static/images/doctor.png" alt="Doctor" class="avatar"> -->
+        </div><button class="logout-btn" onclick="logout()">Logout</button>
       </header>
 
+      
       <div class="content">
         <!-- Dashboard Overview -->
         <section id="overview" class="section">
           <h2>Today's Overview</h2>
           <div class="cards">
-            <div class="card">Appointments: 10</div>
-            <div class="card">Tasks Pending: 3</div>
-            <div class="card">Messages: 5</div>
+            <div class="card">Appointments: <span id="appointments-count">0</span></div>
+            <div class="card">Tasks Pending: {{ overview.tasks_pending }}</div>
+            <div class="card">Current Token NO: <span id="current-token-count">0</span></div>
           </div>
         </section>
+
+        <!-- Appointment Section -->
+        <section id="appointments" class="section hidden">
+          <h2>Personal Appointments</h2>
+          <form id="add-appointment-form">
+            <label for="appointment-patient-name">Patient Name:</label>
+            <input type="text" id="appointment-patient-name" required>
+            
+            <label for="appointment-date">Appointment Date:</label>
+            <input type="datetime-local" id="appointment-date" required>
+
+            <label for="appointment-notes">Notes:</label>
+            <textarea id="appointment-notes" required></textarea>
+
+            <button type="submit">Add Appointment</button>
+          </form>
+
+          <div id="appointments-list">
+            <h3>Scheduled Appointments</h3>
+            <ul id="appointments-ul">
+              <!-- Appointments will be dynamically added -->
+            </ul>
+          </div>
+        </section>
+
 
         <!-- Patient Tokens Section -->
         <section id="tokens" class="section hidden">
           <h2>Patient Tokens</h2>
           <ul id="token-list">
-            <!-- Tokens will be dynamically added here -->
+            <!-- Tokens will be dynamically added -->
           </ul>
         </section>
 
@@ -52,6 +79,7 @@
         <section id="history" class="section hidden">
           <h2>Patient History</h2>
           <p>View patient's previous medical records, treatment history, and visits.</p>
+          <input type="text" id="search-bar" placeholder="Search by patient name..." />
           <table id="patient-history-table">
             <thead>
               <tr>
@@ -62,7 +90,7 @@
               </tr>
             </thead>
             <tbody id="history-list">
-              <!-- Patient history will be dynamically populated -->
+              <!-- History will be dynamically populated -->
             </tbody>
           </table>
         </section>
@@ -70,11 +98,31 @@
         <!-- Prescriptions Section -->
         <section id="prescriptions" class="section hidden">
           <h2>Prescriptions</h2>
-          <div id="prescriptions-list">
-            <!-- List of prescriptions -->
-          </div>
-          <button id="create-prescription">Create Prescription</button>
+        
+          <!-- Prescription Form -->
+          <form id="prescription-form">
+            <label for="patient-name">Patient Name:</label>
+            <input type="text" id="patient-name" placeholder="Enter patient name" required>
+        
+            <label for="medicine">Medicine:</label>
+            <textarea id="medicine" placeholder="Enter medicine details" required></textarea>
+        
+            <label for="dosage">Dosage:</label>
+            <input type="text" id="dosage" placeholder="e.g., 2x a day" required>
+        
+            <label for="notes">Additional Notes:</label>
+            <textarea id="notes" placeholder="Enter additional instructions"></textarea>
+        
+            <button type="submit">Create Prescription</button>
+          </form>
+        
+          <!-- Prescription List -->
+          <h3>Prescription History</h3>
+          <ul id="prescription-list">
+            <!-- Dynamically populated prescriptions -->
+          </ul>
         </section>
+        
 
         <!-- Update Patient Records Section -->
         <section id="update-records" class="section hidden">
@@ -95,13 +143,6 @@
       </div>
     </div>
   </div>
-  <!-- <script src="scripts/firebase-config.js"></script> -->
-  <script src="scripts/doctor.js"></script>
+  <script type="module" src="/scripts/doctor.js"></script>
 </body>
 </html>
-
-
-
-
-
-
