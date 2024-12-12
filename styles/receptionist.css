@@ -227,3 +227,13 @@ table th {
 .dropdown button:hover {
   background-color: #f0f0f0;
 }
+
+.prescription-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.prescription-item span {
+  margin-right: 15px; /* Space between each element */
+}

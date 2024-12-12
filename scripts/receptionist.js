@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-import { getFirestore, onSnapshot, query, deleteDoc, where, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { getFirestore, onSnapshot, query, deleteDoc, where, collection, addDoc, getDocs, orderBy } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -205,41 +205,139 @@ async function loadTokens() {
 
 window.addEventListener('load', loadTokens);
 
-// Manage Billing
-billingForm.addEventListener('submit', (event) => {
+
+// Function to generate a bill
+document.getElementById('billing-form').addEventListener('submit', async (event) => {
   event.preventDefault();
 
+  // Get the values from the form
   const patientName = document.getElementById('bill-patient-name').value;
   const service = document.getElementById('service').value;
-  const amount = document.getElementById('amount').value;
+  const amount = parseFloat(document.getElementById('amount').value);
 
-  const billingItem = document.createElement('li');
-  billingItem.textContent = `Patient: ${patientName}, Service: ${service}, Amount: $${amount}`;
-  billingHistory.appendChild(billingItem);
+  if (isNaN(amount) || amount <= 0) {
+    alert('Please enter a valid amount.');
+    return;
+  }
 
-  alert(`Bill for ${patientName} has been generated.`);
-  billingForm.reset();
+  // Create a new bill object
+  const bill = {
+    patientName,
+    service,
+    amount,
+    date: new Date().toISOString(), // Store the current date
+  };
+
+  // Add the bill to Firebase (you can modify this to your desired Firestore collection)
+  try {
+    const docRef = await addDoc(collection(db, 'billingHistory'), bill);
+    console.log("Bill generated with ID: ", docRef.id);
+
+    // Add the generated bill to the billing history section in UI
+    addToBillingHistory(bill);
+
+    // Reset the form after submission
+    document.getElementById('billing-form').reset();
+    alert('Bill generated successfully!');
+  } catch (error) {
+    console.error('Error generating bill:', error);
+    alert('Failed to generate bill. Please try again.');
+  }
 });
 
-// Listen for called tokens
-function listenForCalledTokens() {
-  const tokensQuery = query(collection(db, "tokens"), where("status", "==", "called"));
+// Function to add a generated bill to the billing history section
+function addToBillingHistory(bill) {
+  const billingHistoryList = document.querySelector('#billing-history ul');
+  const listItem = document.createElement('li');
+  listItem.classList.add('billing-item');
+  listItem.innerHTML = `
+    <span><strong>Patient:</strong> ${bill.patientName}</span> | 
+    <span><strong>Service:</strong> ${bill.service}</span> | 
+    <span><strong>Amount:</strong> ${bill.amount}</span> | 
+    <span><strong>Date:</strong> ${new Date(bill.date).toLocaleDateString()}</span>
+  `;
 
-  onSnapshot(tokensQuery, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === "added") {
-        const token = change.doc.data();
-        alert(`Doctor is calling: Token ${token.tokenNumber} for ${token.patientName}`);
-      }
-    });
-  });
+  billingHistoryList.appendChild(listItem);
 }
 
-// Initialize listeners and tokens on page load
-document.addEventListener("DOMContentLoaded", () => {
-  listenForCalledTokens();
-  loadTokens();
+// Function to load billing history from Firestore
+async function loadBillingHistory() {
+  try {
+    const billingHistoryQuery = query(collection(db, 'billingHistory'), orderBy('date', 'desc'));
+    const querySnapshot = await getDocs(billingHistoryQuery);
+
+    const billingHistoryList = document.getElementById('billing-history').querySelector('ul');
+    billingHistoryList.innerHTML = ''; // Clear any existing content
+
+    if (querySnapshot.empty) {
+      console.log('No bills found in the database.');
+      return; // If no bills are found, exit the function
+    }
+
+    // Loop through each bill document from Firestore and display it
+    querySnapshot.forEach((doc) => {
+      const bill = doc.data();
+      const listItem = document.createElement('li');
+      listItem.classList.add('billing-item');
+      listItem.innerHTML = `
+        <span><strong>Patient:</strong> ${bill.patientName}</span> | 
+        <span><strong>Service:</strong> ${bill.service}</span> | 
+        <span><strong>Amount:</strong> ${bill.amount}</span> | 
+        <span><strong>Date:</strong> ${new Date(bill.date).toLocaleDateString()}</span>
+      `;
+      billingHistoryList.appendChild(listItem);
+    });
+  } catch (error) {
+    console.error('Error loading billing history:', error);
+  }
+}
+
+// Call the function to load billing history when the page is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  loadBillingHistory();  // Ensure it's being called when the page is loaded
 });
+
+
+// Function to load prescriptions from Firebase and display in the billing section
+async function loadPrescriptionsForBilling() {
+  try {
+    // Query to fetch prescriptions, ordered by creation date (or any other order)
+    const prescriptionsQuery = query(collection(db, 'prescriptions'), orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(prescriptionsQuery);
+
+    // Clear any existing content in the prescription list before adding new ones
+    const prescriptionList = document.getElementById('prescription-list');
+    prescriptionList.innerHTML = '';
+
+    // Loop through each document in the Firestore query snapshot
+    querySnapshot.forEach((doc) => {
+      const prescription = doc.data();
+
+      // Create an HTML list item to display the prescription details in one line
+      const listItem = document.createElement('li');
+      listItem.classList.add('prescription-item');
+      listItem.innerHTML = `
+        <span><strong>Patient:</strong> ${prescription.patientName}</span> | 
+        <span><strong>Medicine:</strong> ${prescription.medicine}</span> | 
+        <span><strong>Dosage:</strong> ${prescription.dosage}</span> | 
+        <span><strong>Date:</strong> ${new Date(prescription.createdAt).toLocaleDateString()}</span>
+      `;
+
+      // Append the list item to the prescription list
+      prescriptionList.appendChild(listItem);
+    });
+
+  } catch (error) {
+    console.error('Error loading prescriptions for billing:', error);
+    alert('Error loading prescriptions. Please try again later.');
+  }
+}
+
+// Call the function to load prescriptions when the page is loaded
+document.addEventListener('DOMContentLoaded', loadPrescriptionsForBilling);
+
+
+
 
 // Logout functionality
 logoutBtn.addEventListener('click', () => {
