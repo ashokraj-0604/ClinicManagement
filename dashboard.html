@@ -13,7 +13,6 @@
       <h2>CLINIC MANAGER</h2>
       <ul>
         <li><button class="nav-btn" data-section="overview">Dashboard</button></li>
-        <li><button class="nav-btn" data-section="appointments">Appointments</button></li>
         <li><button class="nav-btn" data-section="tokens">Patient Tokens</button></li>
         <li><button class="nav-btn" data-section="history">Patient History</button></li>
         <li><button class="nav-btn" data-section="prescriptions">Prescriptions</button></li>
@@ -36,41 +35,16 @@
         <section id="overview" class="section">
           <h2>Today's Overview</h2>
           <div class="cards">
-            <div class="card">Appointments: <span id="appointments-count">0</span></div>
+            <div class="card">Appointments: <span id="patients-seen-count">0</span></div>
             <div class="card">Tasks Pending: {{ overview.tasks_pending }}</div>
             <div class="card">Current Token NO: <span id="current-token-count">0</span></div>
           </div>
         </section>
 
-        <!-- Appointment Section -->
-        <section id="appointments" class="section hidden">
-          <h2>Personal Appointments</h2>
-          <form id="add-appointment-form">
-            <label for="appointment-patient-name">Patient Name:</label>
-            <input type="text" id="appointment-patient-name" required>
-            
-            <label for="appointment-date">Appointment Date:</label>
-            <input type="datetime-local" id="appointment-date" required>
-
-            <label for="appointment-notes">Notes:</label>
-            <textarea id="appointment-notes" required></textarea>
-
-            <button type="submit">Add Appointment</button>
-          </form>
-
-          <div id="appointments-list">
-            <h3>Scheduled Appointments</h3>
-            <ul id="appointments-ul">
-              <!-- Appointments will be dynamically added -->
-            </ul>
-          </div>
-        </section>
-
-
         <!-- Patient Tokens Section -->
         <section id="tokens" class="section hidden">
           <h2>Patient Tokens</h2>
-          <ul id="token-list">
+          <ul id="tokenList" class="token-container">
             <!-- Tokens will be dynamically added -->
           </ul>
         </section>
@@ -139,6 +113,26 @@
 
             <button type="submit">Update Record</button>
           </form>
+        </section>
+
+        <!--patient detail-->
+
+        <section id="patient-details" class="section hidden">
+          <h2>Patient Details</h2>
+          <input type="text" id="search-bar" placeholder="Search by patient name..." />
+          <table id="patient-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Contact</th>
+                <th>Gender</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <!-- Patient rows will be inserted here -->
+            </tbody>
+          </table>
         </section>
       </div>
     </div>

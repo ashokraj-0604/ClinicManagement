@@ -15,17 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
       showSection(button.dataset.section);
     });
   });
-  
-  // Logout functionality
-  function logout() {
-    alert('You have been logged out.');
-    window.location.href = '/login.html'; // Adjust the redirect path as needed
-  }
-
-  // Attach logout function to the button
-  document.querySelector('.logout-btn').addEventListener('click', logout);
+  showSection('overview');
 });
-
+  
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
 import { getFirestore,onSnapshot, collection, addDoc, getDocs, deleteDoc, doc,where,updateDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
@@ -68,112 +60,51 @@ navButtons.forEach((button) => {
   });
 });
 
-
-// Selectors
-const appointmentsForm = document.getElementById('add-appointment-form');
-const appointmentsList = document.getElementById('appointments-ul');
-const appointmentsCount = document.getElementById('appointments-count');
-
-// Add Appointment
-appointmentsForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const patientName = document.getElementById('appointment-patient-name').value;
-  const appointmentDate = document.getElementById('appointment-date').value;
-  const notes = document.getElementById('appointment-notes').value;
-
-  const newAppointment = {
-    patientName: patientName,
-    appointmentDate: appointmentDate,
-    notes: notes,
-    createdAt: new Date(),
-  };
-
-  try {
-    // Store appointment in Firestore
-    await addDoc(collection(db, 'appointments'), newAppointment);
-    alert('Appointment added successfully!');
-    appointmentsForm.reset();
-    loadAppointments(); // Reload the appointments list
-    updateAppointmentCount(); // Update the appointment count
-  } catch (error) {
-    console.error('Error adding appointment: ', error);
-    alert('Error adding appointment.');
-  }
-});
-
-// Load Appointments and Display Count
-async function loadAppointments() {
-  try {
-    const querySnapshot = await getDocs(collection(db, 'appointments'));
-    appointmentsList.innerHTML = ''; // Clear the list before populating
-
-    querySnapshot.forEach((doc) => {
-      const appointment = doc.data();
-      const listItem = document.createElement('li');
-      listItem.textContent = `${appointment.patientName} - ${appointment.appointmentDate}`;
-      appointmentsList.appendChild(listItem);
-    });
-  } catch (error) {
-    console.error('Error loading appointments: ', error);
-  }
-}
-
-// Update Appointment Count
-async function updateAppointmentCount() {
-  try {
-    const querySnapshot = await getDocs(collection(db, 'appointments'));
-    appointmentsCount.textContent = querySnapshot.size; // Set the appointment count
-  } catch (error) {
-    console.error('Error fetching appointment count: ', error);
-  }
-}
-
-// Load appointments and count on page load
-window.addEventListener('load', () => {
-  loadAppointments(); // Load the appointments
-  updateAppointmentCount(); // Update the appointment count
-});
-
 // Function to Load Tokens
 async function loadTokens() {
   try {
     const tokensQuery = query(collection(db, 'tokens'), orderBy('createdAt', 'asc'));
     const querySnapshot = await getDocs(tokensQuery);
 
+    const tokenList = document.getElementById('tokenList');
     tokenList.innerHTML = ''; // Clear the list before populating
 
     querySnapshot.forEach((doc) => {
       const token = doc.data();
+
+      // Create the list item for the token
       const listItem = document.createElement('li');
-      listItem.textContent = `Token: ${token.tokenNumber}, Patient: ${token.patientName}`;
+      listItem.classList.add('token-card');
 
-      // Create 'Call' button
-      const callButton = document.createElement('button');
-      callButton.textContent = 'Call';
-      callButton.classList.add('call-btn');
-      callButton.addEventListener('click', () => {
-        alert(`Calling Token Number: ${token.tokenNumber}`);
-      });
-
-      // Create 'Delete' button
-      const deleteButton = document.createElement('button');
-      deleteButton.textContent = 'Delete';
-      deleteButton.classList.add('delete-btn');
-      deleteButton.addEventListener('click', () => {
-        deleteToken(doc.id);
-      });
-
-      // Append buttons to the list item
-      listItem.appendChild(callButton);
-      listItem.appendChild(deleteButton);
+      // Add token details
+      listItem.innerHTML = `
+        <div class="token-title">Patient: ${token.patientName}</div>
+        <div class="token-number">Token: ${token.tokenNumber}</div>
+        <div class="token-time">Appointment: ${token.appointmentTime || 'N/A'}</div>
+        <div class="token-actions">
+          <button class="btn-reject" data-id="${doc.id}">Delete</button>
+        </div>
+      `;
 
       tokenList.appendChild(listItem);
     });
+
+    // Add event listeners for buttons
+    document.querySelectorAll('.btn-reject').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        const tokenId = event.target.dataset.id;
+        deleteToken(tokenId);
+      });
+    });
   } catch (error) {
-    console.error('Error fetching tokens: ', error);
+    console.error('Error loading tokens:', error);
   }
 }
+
+
+// Initial call to load tokens
+loadTokens();
+
 
 // Function to Load and Display Token Count
 async function updateTokenCount() {
@@ -352,19 +283,11 @@ prescriptionForm.addEventListener('submit', (e) => {
 // Load prescriptions on page load
 document.addEventListener('DOMContentLoaded', loadPrescriptions);
 
-
-
-
-
-async function callToken(tokenId) {
-  const tokenRef = doc(db, "tokens", tokenId);
-  try {
-    await updateDoc(tokenRef, {
-      status: "called",
-      calledAt: new Date(), // Add timestamp
-    });
-    alert("Token called successfully!");
-  } catch (error) {
-    console.error("Error calling token: ", error);
-  }
+// Logout functionality
+function logout() {
+  alert('You have been logged out.');
+  window.location.href = '/login.html'; // Adjust the redirect path as needed
 }
+
+// Attach logout function to the button
+document.querySelector('.logout-btn').addEventListener('click', logout);
