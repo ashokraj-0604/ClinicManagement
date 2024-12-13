@@ -54,7 +54,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
                     if (doc.exists) {
                         const role = doc.data().role;
                         if (role === 'doctor') {
-                            window.location.href = '/dashboard.html'; // Redirect to doctor dashboard
+                            window.location.href = '/doctor.html'; // Redirect to doctor dashboard
                         } else if (role === 'receptionist') {
                             window.location.href = '/receptionist.html'; // Redirect to receptionist dashboard
                         } else {

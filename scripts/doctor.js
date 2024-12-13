@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showSection(button.dataset.section);
     });
   });
-  showSection('overview');
+  showSection('tokens');
 });
   
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
@@ -80,7 +80,6 @@ async function loadTokens() {
       listItem.innerHTML = `
         <div class="token-title">Patient: ${token.patientName}</div>
         <div class="token-number">Token: ${token.tokenNumber}</div>
-        <div class="token-time">Appointment: ${token.appointmentTime || 'N/A'}</div>
         <div class="token-actions">
           <button class="btn-reject" data-id="${doc.id}">Delete</button>
         </div>
@@ -101,27 +100,8 @@ async function loadTokens() {
   }
 }
 
-
 // Initial call to load tokens
 loadTokens();
-
-
-// Function to Load and Display Token Count
-async function updateTokenCount() {
-  try {
-    const tokensQuery = collection(db, 'tokens');
-    const querySnapshot = await getDocs(tokensQuery);
-
-    const tokenCount = querySnapshot.size; // Count the total tokens
-    const tokenCountElement = document.getElementById('current-token-count');
-    tokenCountElement.textContent = tokenCount; // Update the token count in the dashboard
-  } catch (error) {
-    console.error('Error fetching token count: ', error);
-  }
-}
-
-// Call the function to update token count on page load
-window.addEventListener('load', updateTokenCount);
 
 // Function to Delete Token
 async function deleteToken(tokenId) {
@@ -160,9 +140,15 @@ searchBar.addEventListener('input', () => {
 updateRecordsForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  const patientName = document.getElementById('patient-name').value;
+  const patientName = document.getElementById('patient-name-update').value;
   const patientCondition = document.getElementById('patient-condition').value;
   const treatment = document.getElementById('treatment').value;
+
+
+  if (!patientName) {
+    alert('Please fill in all the fields!');
+    return; // Stop the submission if any field is missing
+  }
 
   const updatedRecord = {
     name: patientName,
@@ -270,7 +256,7 @@ prescriptionForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   const prescription = {
-    patientName: document.getElementById('patient-name').value,
+    patientName: document.getElementById('patient-name-prescription').value,
     medicine: document.getElementById('medicine').value,
     dosage: document.getElementById('dosage').value,
     notes: document.getElementById('notes').value,
