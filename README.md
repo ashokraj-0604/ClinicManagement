@@ -1,5 +1,6 @@
 # Clinic Management System
 
+![Dashboard Screenshot]()
 
 A web-based **Clinic Management System** designed to streamline operations for clinic receptionists and enhance efficiency in managing patient data, appointments, tokens, billing, and prescriptions. This system uses **HTML**, **CSS**, **JavaScript**, and **Firebase Firestore** for a lightweight and interactive solution.
 
