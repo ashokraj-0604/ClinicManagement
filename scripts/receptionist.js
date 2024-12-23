@@ -1,3 +1,22 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getFirestore, onSnapshot, query, deleteDoc, where, collection, addDoc, getDocs, orderBy } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDbUGT0C8pZPYyn9G61DlBSDVOob2Qzxxc",
+  authDomain: "clinicmanager-72e37.firebaseapp.com",
+  projectId: "clinicmanager-72e37",
+  storageBucket: "clinicmanager-72e37.firebasestorage.app",
+  messagingSenderId: "438961594747",
+  appId: "1:438961594747:web:a7666784f034ff247addde",
+  measurementId: "G-WMXJS6JTG8",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const navButtons = document.querySelectorAll('.nav-btn');
   const sections = document.querySelectorAll('.section');
@@ -17,24 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   showSection('add-patient');
 });
-
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-import { getFirestore, onSnapshot, query, deleteDoc, where, collection, addDoc, getDocs, orderBy } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
-
-// Firebase Configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDbUGT0C8pZPYyn9G61DlBSDVOob2Qzxxc",
-  authDomain: "clinicmanager-72e37.firebaseapp.com",
-  projectId: "clinicmanager-72e37",
-  storageBucket: "clinicmanager-72e37.firebasestorage.app",
-  messagingSenderId: "438961594747",
-  appId: "1:438961594747:web:a7666784f034ff247addde",
-  measurementId: "G-WMXJS6JTG8",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 // Selectors
 const navButtons = document.querySelectorAll('.nav-btn');
@@ -335,9 +336,6 @@ async function loadPrescriptionsForBilling() {
 
 // Call the function to load prescriptions when the page is loaded
 document.addEventListener('DOMContentLoaded', loadPrescriptionsForBilling);
-
-
-
 
 // Logout functionality
 logoutBtn.addEventListener('click', () => {

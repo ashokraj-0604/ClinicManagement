@@ -1,26 +1,14 @@
-const admin = require('firebase-admin');
-const functions = require('firebase-functions');
+const firebaseConfig = {
+    apiKey: "AIzaSyDbUGT0C8pZPYyn9G61DlBSDVOob2Qzxxc",
+    authDomain: "clinicmanager-72e37.firebaseapp.com",
+    projectId: "clinicmanager-72e37",
+    storageBucket: "clinicmanager-72e37.appspot.com",
+    messagingSenderId: "438961594747",
+    appId: "1:438961594747:web:a7666784f034ff247addde",
+    measurementId: "G-WMXJS6JTG8"
+};
 
-// Initialize Firebase Admin SDK
-admin.initializeApp();
-
-// Cloud Function to set admin role
-exports.setAdminRole = functions.https.onCall((data, context) => {
-  // Ensure the function is called by an authenticated user with an 'admin' claim
-  if (!context.auth || !context.auth.token.admin) {
-    throw new functions.https.HttpsError('permission-denied', 'Only an admin can assign roles');
-  }
-
-  // Get user UID and assign 'admin' role
-  const uid = data.uid;
-  const customClaims = { admin: true };
-
-  // Set the custom claims (admin role)
-  return admin.auth().setCustomUserClaims(uid, customClaims)
-    .then(() => {
-      return { message: `Admin role assigned to user with UID: ${uid}` };
-    })
-    .catch(error => {
-      throw new functions.https.HttpsError('internal', error.message);
-    });
-});
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
