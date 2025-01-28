@@ -104,5 +104,3 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
             alert('Error checking role availability.');
         });
 });
-
-

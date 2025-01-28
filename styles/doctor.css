@@ -219,9 +219,6 @@ form button:hover {
   }
 }
 
-
-
-
 /* Token Container */
 .token-container {
   display: flex;
@@ -300,6 +297,3 @@ form button:hover {
   background-color: #c82333;
   transform: scale(1.1);
 }
-
-
-

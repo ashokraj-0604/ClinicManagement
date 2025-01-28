@@ -135,7 +135,6 @@ searchBar.addEventListener('input', () => {
   });
 });
 
-
 // Add updated record to patient history
 updateRecordsForm.addEventListener('submit', async (event) => {
   event.preventDefault();
